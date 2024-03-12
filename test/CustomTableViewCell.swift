@@ -10,6 +10,8 @@ import UIKit
 class CustomTableViewCell: UITableViewCell {
   static let cellID = "CustomTableViewCell"
   
+  var randomNumber = 0
+  
   let collectionView: UICollectionView = {
     let layout = UICollectionViewFlowLayout()
     layout.scrollDirection = .horizontal
@@ -28,6 +30,11 @@ class CustomTableViewCell: UITableViewCell {
     collectionView.delegate = self
     collectionView.register(CustomCollectionViewCell.self, forCellWithReuseIdentifier: CustomCollectionViewCell.cellID)
     layoutForCollection()
+    Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+      guard let self = self else { return }
+      self.randomNumber = Int.random(in: Int(Int16.min)..<Int(Int16.max))
+      collectionView.reloadData()
+    }
   }
   
   private func layoutForCollection() {
@@ -56,7 +63,7 @@ extension CustomTableViewCell: UICollectionViewDataSource, UICollectionViewDeleg
     cell.contentView.layer.borderColor = UIColor.systemCyan.cgColor
     cell.contentView.clipsToBounds = true
     cell.contentView.layer.cornerRadius = 10
-    cell.mainLabel.text = "\(indexPath.item)"
+    cell.mainLabel.text = "\(randomNumber + indexPath.item)"
     return cell
   }
   
